@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:1.15
+    ports:
+      - "80:80"
+    restart: unless-stopped
