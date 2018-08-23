@@ -2,13 +2,53 @@
 
 This is a quick example of how to deploy a nginx service into a Kubernetes cluster.
 
-## Option 1: manually
+## 1. Run Kubernetes via Minikube
+
+* Install Minikube: https://kubernetes.io/docs/setup/minikube/
+
+### 1.1. Run on Minikube driver VirtualBox
+
+* Install VirtualBox + VirtualBox VM VirtualBox Extension Pack: https://www.virtualbox.org/wiki/Downloads
+* Set default driver: `minikube config set vm-driver virtualbox`
+
+> More settings: `~/.minikube/machines/minikube/config.json`
+
+* Start k9s cluster: `minikube start`
+* Continue with `2. Run Kubernetes deployment`
+* See results: `curl $(minikube service mynginx --url)`
+
+### 1.2. Run on Minikube driver KVM2
+
+* Install KVM2: https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#kvm2-driver
+* Set default driver: `minikube config set vm-driver kvm2`
+
+> More settings: `~/.minikube/machines/minikube/config.json`
+
+* Start k9s cluster: `minikube start`
+* Continue with `2. Run Kubernetes deployment`
+* See results: `curl $(minikube service mynginx --url)`
+
+### 1.3. Stop & delete Minikube
+
+```shell
+minikube stop
+minikube delete
+```
+
+## 2. Run Kubernetes deployment
+
+### 2.1. Manually
 
 * Create
 
 ```shell
 kubectl run nginx --image=nginx --replicas=1 --port=80
 kubectl expose deployment nginx --type=LoadBalancer --name=mynginx
+```
+
+* View
+
+```shell
 kubectl describe service mynginx
 ```
 
@@ -19,8 +59,9 @@ kubectl delete service mynginx
 kubectl delete deployment nginx
 ```
 
-## Option 2: via docker compose + kompose
+## 2.2. Via docker compose + kompose
 
+* Install kompose: http://kompose.io/
 * From `docker-compose.yml`
 
 ```yaml
@@ -35,19 +76,16 @@ services:
 ```
 
 * Run: `kompose convert -f docker-compose.yml`
-* Output: 
+* Output:
 
 ```
-WARN Restart policy 'unless-stopped' in service nginx is not supported, convert it to 'always' 
-INFO Kubernetes file "nginx-service.yaml" created 
+WARN Restart policy 'unless-stopped' in service nginx is not supported, convert it to 'always'
+INFO Kubernetes file "nginx-service.yaml" created
 INFO Kubernetes file "nginx-deployment.yaml" created
-```
-
-```
+$ tree
 .
 ├── nginx-deployment.yaml
 └── nginx-service.yaml
-
 ```
 
 * Change @`nginx-service.yaml`:
