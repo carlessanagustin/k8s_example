@@ -6,26 +6,25 @@ This is a quick example of how to deploy a nginx service into a Kubernetes clust
 
 * Install Minikube: https://kubernetes.io/docs/setup/minikube/
 
+> Minikube settings:
+> Global `cat ~/.minikube/config/config.json`
+> Local: `cat ~/.minikube/machines/minikube/config.json`
+> Command: `minikube config [set|get] --help`
+
 ### 1.1. Run on Minikube driver VirtualBox
 
 * Install VirtualBox + VirtualBox VM VirtualBox Extension Pack: https://www.virtualbox.org/wiki/Downloads
 * Set default driver: `minikube config set vm-driver virtualbox`
-
-> More settings: `~/.minikube/machines/minikube/config.json`
-
 * Start k9s cluster: `minikube start`
-* Continue with `2. Run Kubernetes deployment`
+* Continue to *2. Run Kubernetes deployment*
 * See results: `curl $(minikube service mynginx --url)`
 
 ### 1.2. Run on Minikube driver KVM2
 
 * Install KVM2: https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#kvm2-driver
 * Set default driver: `minikube config set vm-driver kvm2`
-
-> More settings: `~/.minikube/machines/minikube/config.json`
-
 * Start k9s cluster: `minikube start`
-* Continue with `2. Run Kubernetes deployment`
+* Continue to *2. Run Kubernetes deployment*
 * See results: `curl $(minikube service mynginx --url)`
 
 ### 1.3. Stop & delete Minikube
