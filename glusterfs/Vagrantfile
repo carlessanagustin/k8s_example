@@ -1,0 +1,26 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/xenial64"
+  config.vm.boot_timeout = 60
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = 512
+    vb.cpus = 1
+    vb.gui = false
+  end
+
+  config.vm.define "server" do |server|
+    server.vm.host_name = "server"
+    server.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
+    server.vm.network "private_network", ip: "192.168.32.10"
+    server.vm.provision "shell", inline: "apt-get update && apt-get -y install glusterfs-server"
+  end
+
+  config.vm.define "client" do |client|
+    client.vm.host_name = "client"
+    client.vm.network "forwarded_port", guest: 80, host: 8081, auto_correct: true
+    client.vm.network "private_network", ip: "192.168.32.11"
+    client.vm.provision "shell", inline: "apt-get update && apt-get -y install glusterfs-client"
+  end
+end
