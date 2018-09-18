@@ -1,0 +1,135 @@
+# from: https://www.digitalocean.com/community/tutorials/how-to-create-a-kubernetes-1-10-cluster-using-kubeadm-on-centos-7
+# mode: https://kubernetes.io/docs/setup/independent/install-kubeadm/
+
+---
+- hosts: k8s
+  become: yes
+  tasks:
+    - name: Debian - install requirements
+      when: ansible_os_family == "Debian"
+      apt:
+        package: "{{ item }}"
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+      with_items:
+        - apt-transport-https
+        - curl
+
+    - name: RedHat - install Docker
+      when: ansible_os_family == "RedHat"
+      yum:
+        name: docker
+        state: present
+        update_cache: true
+
+    - name: Debian - install Docker
+      when: ansible_os_family == "Debian"
+      apt:
+        package: docker.io
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: start Docker
+      service:
+        name: docker
+        state: restarted
+        enabled: yes
+
+    - name: RedHat - disable SELinux
+      when: ansible_os_family == "RedHat"
+      command: setenforce 0
+
+    - name: RedHat - disable SELinux on reboot
+      when: ansible_os_family == "RedHat"
+      selinux:
+        state: disabled
+
+    - name: ensure net.bridge.bridge-nf-call-ip6tables is set to 1
+      tags: flannel
+      sysctl:
+        name: net.bridge.bridge-nf-call-ip6tables
+        value: 1
+        state: present
+
+    - name: ensure net.bridge.bridge-nf-call-iptables is set to 1
+      tags: flannel
+      sysctl:
+        name: net.bridge.bridge-nf-call-iptables
+        value: 1
+        state: present
+
+    - name: RedHat - add Kubernetes repository
+      when: ansible_os_family == "RedHat"
+      yum_repository:
+        name: Kubernetes
+        description: Kubernetes YUM repository
+        baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+        gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+        gpgcheck: yes
+
+    - name: Debian - add Kubernetes key
+      when: ansible_os_family == "Debian"
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+
+    - name: Debian - add Kubernetes repository
+      when: ansible_os_family == "Debian"
+      apt_repository:
+        repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+        state: present
+        filename: kubernetes
+        update_cache: yes
+
+    - name: RedHat - install kubelet + kubeadm
+      when: ansible_os_family == "RedHat"
+      yum:
+        name: "{{ item }}"
+        state: present
+        update_cache: true
+      with_items:
+        - kubelet
+        - kubeadm
+
+    - name: Debian - install requirements
+      when: ansible_os_family == "Debian"
+      apt:
+        package: "{{ item }}"
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+      with_items:
+        - kubelet
+        - kubeadm
+
+    - name: start kubelet
+      service:
+        name: kubelet
+        enabled: yes
+        state: started
+
+    - name: add vagrant user into docker group
+      when: ansible_user == "vagrant"
+      command: usermod -aG docker vagrant
+
+    - name: setup docker log
+      shell: "wget -O - https://goo.gl/nn7eWh | bash"
+
+- hosts: masters
+  become: yes
+  tasks:
+    - name: RedHat - install kubectl
+      when: ansible_os_family == "RedHat"
+      yum:
+        name: kubectl
+        state: present
+
+    - name: Debian - install kubectl
+      when: ansible_os_family == "Debian"
+      apt:
+        package: kubectl
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600

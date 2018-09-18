@@ -1,0 +1,17 @@
+---
+- hosts: masters
+  tasks:
+    - name: setting pod network cidr
+      become: yes
+      shell: "kubeadm init --pod-network-cidr=10.244.0.0/16 >> $HOME/cluster_initialized.txt"
+
+    - name: settinn up network
+      shell: "{{ item }}"
+      with_items:
+        - "mkdir -p $HOME/.kube"
+        - "sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config"
+        - "sudo chown $(id -u):$(id -g) $HOME/.kube/config"
+
+    - name: deploy a pod network to the cluster
+      #become: yes
+      shell: "kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml >> $HOME/pod_network_setup.txt"

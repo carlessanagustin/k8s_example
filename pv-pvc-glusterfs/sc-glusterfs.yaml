@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: StorageClass
+metadata:
+  name: gluster-sc
+provisioner: kubernetes.io/glusterfs
+parameters:
+  endpoint: "gluster-ep"
+  resturl: "http://192.168.39.1:8081"

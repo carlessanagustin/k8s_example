@@ -1,0 +1,22 @@
+[masters]
+master  ansible_host=127.0.0.1 ansible_port=2222 ansible_ssh_private_key_file=.vagrant/machines/k8sMaster/virtualbox/private_key
+
+[workers]
+worker  ansible_host=127.0.0.1 ansible_port=2200 ansible_ssh_private_key_file=.vagrant/machines/k8sSlave/virtualbox/private_key
+
+
+[k8s:children]
+masters
+workers
+
+
+
+[gluster]
+gluster  ansible_host=127.0.0.1 ansible_port=2201 ansible_ssh_private_key_file=.vagrant/machines/gluster/virtualbox/private_key
+
+
+
+
+[all:vars]
+ansible_user=vagrant
+ansible_python_interpreter=/usr/bin/python3.5
