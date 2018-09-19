@@ -1,0 +1,36 @@
+---
+- hosts: all
+  tasks:
+    - name: Debian - install glusterfs client
+      when: ansible_os_family == "Debian"
+      become: yes
+      apt:
+        package: glusterfs-client
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+
+- hosts: gluster
+  tasks:
+    - name: Debian - install glusterfs server
+      when: ansible_os_family == "Debian"
+      become: yes
+      apt:
+        package: glusterfs-server
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: configuring gluster
+      become: yes
+      shell: "{{ item}}"
+      with_items:
+        - 'sed -i "s|^127.0.0.1.*|& $GSERVER|m" /etc/hosts'
+        - 'mkdir -p $S_FOLDER'
+        - 'gluster volume create $GNAME $GSERVER:$S_FOLDER force'
+        - 'gluster volume start $GNAME'
+        - 'echo "This is a glusterfs test" > $S_FOLDER/index.html'
+      environment:
+        S_FOLDER: '/tmp/gfs'
+        GNAME: 'gfs'
+        GSERVER: 'gserver'

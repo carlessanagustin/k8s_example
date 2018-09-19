@@ -15,6 +15,7 @@
       with_items:
         - apt-transport-https
         - curl
+        - make
 
     - name: RedHat - install Docker
       when: ansible_os_family == "RedHat"
