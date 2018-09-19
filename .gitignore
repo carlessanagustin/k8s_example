@@ -2,3 +2,4 @@
 ARCHIVE
 *.log
 .vagrant
+*.retry
