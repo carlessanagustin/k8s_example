@@ -10,6 +10,14 @@
         update_cache: yes
         cache_valid_time: 3600
 
+    - name: TODO - adding gluster to /etc/hosts
+      become: yes
+      shell: 'echo "$GSERVER_IP    $GSERVER" >> /etc/hosts'
+      environment:
+        GSERVER: 'gserver'
+        GSERVER_IP: '192.168.32.10'
+
+
 - hosts: gluster
   tasks:
     - name: Debian - install glusterfs server
@@ -21,7 +29,7 @@
         update_cache: yes
         cache_valid_time: 3600
 
-    - name: configuring gluster
+    - name: TODO - configuring gluster
       become: yes
       shell: "{{ item}}"
       with_items:

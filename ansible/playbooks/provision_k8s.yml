@@ -84,26 +84,35 @@
         filename: kubernetes
         update_cache: yes
 
-    - name: RedHat - install kubelet + kubeadm
+    - name: RedHat - install kubelet
       when: ansible_os_family == "RedHat"
       yum:
-        name: "{{ item }}"
+        name: kubelet=1.11.3
         state: present
         update_cache: true
-      with_items:
-        - kubelet
-        - kubeadm
 
-    - name: Debian - install requirements
+    - name: RedHat - install kubeadm
+      when: ansible_os_family == "RedHat"
+      yum:
+        name: kubeadm
+        state: present
+        update_cache: true
+
+    - name: Debian - install kubelet
       when: ansible_os_family == "Debian"
       apt:
-        package: "{{ item }}"
+        package: kubelet=1.11.3-00
+        state: present
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Debian - install kubeadm
+      when: ansible_os_family == "Debian"
+      apt:
+        package: kubeadm
         state: latest
         update_cache: yes
         cache_valid_time: 3600
-      with_items:
-        - kubelet
-        - kubeadm
 
     - name: start kubelet
       service:

@@ -35,30 +35,23 @@ glusterv_apply:
 	kubectl apply -f output/nginx-service_LoadBalancer.yaml
 
 monitor_k8s_deploy:
-	watch kubectl get deploy,ep,pv,pvc,svc
+	watch kubectl get deploy,ep,pv,pvc
+
+monitor_k8s_svc:
+	watch kubectl get svc
 
 monitor_k8s_nodes:
 	watch kubectl get nodes
 
-glusterv_up: k8s_up glusterv_apply
-
-glusterv_down: k8s_down
+glusterv_k8s_up: vagrant_reset glusterv_provision
 
 vagrant_reset:
 	-vagrant destroy -f
-	#vagrant up k8sMaster k8sSlave
 	vagrant up
 
-glusterv_k8s_up: vagrant_reset provision_k8s setup_k8s_master setup_k8s_worker provision_gluster
-
-provision_k8s:
+glusterv_provision:
 	ansible-playbook -i ./ansible/inventory/hosts ./ansible/playbooks/provision_k8s.yml
-
-setup_k8s_master:
 	ansible-playbook -i ./ansible/inventory/hosts ./ansible/playbooks/setup_k8s_master.yml
-
-setup_k8s_worker:
 	ansible-playbook -i ./ansible/inventory/hosts ./ansible/playbooks/setup_k8s_worker.yml
-
-provision_gluster:
 	ansible-playbook -i ./ansible/inventory/hosts ./ansible/playbooks/provision_glusterfs.yml
+	ansible-playbook -i ./ansible/inventory/hosts ./ansible/playbooks/deploy_pod.yml

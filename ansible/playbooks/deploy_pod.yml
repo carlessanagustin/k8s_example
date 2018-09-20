@@ -1,0 +1,8 @@
+---
+- hosts: masters
+  gather_facts: false
+  tasks:
+    - name: apply kubernetes yaml files
+      shell: make glusterv_apply
+      args:
+        chdir: /vagrant
