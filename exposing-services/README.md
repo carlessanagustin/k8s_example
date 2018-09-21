@@ -63,3 +63,4 @@ Here are a few choices to consider:
 * [Tutorial: Kubernetes Nginx Ingress Controller](./KubernetesNginxIngressController)  - **OK**
 * [Official: NGINX Ingress Controller](./ingress-nginx) - **UNTESTED**
 * [Official: HAProxy Ingress Controller](./ingress-haproxy) - **UNTESTED**
+* [Ingress controller Catalog](https://github.com/jcmoraisjr/ingress/blob/master/docs/catalog.md)
