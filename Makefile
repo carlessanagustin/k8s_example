@@ -33,7 +33,8 @@ localv_results:
 
 
 
-test: vagrant_reset provision_k8s
+k8s_up: vagrant_reset provision_k8s
+
 ### ----------------- glusterfs volume in vagrant instances
 glusterv_up: vagrant_reset provision_k8s provision_glusterfs deploy_pod
 

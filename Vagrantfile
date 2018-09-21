@@ -16,7 +16,6 @@ Vagrant.configure("2") do |config|
       vb.cpus = 1
     end
     k8sMaster.vm.network "private_network", ip: "192.168.32.11"
-#    k8sMaster.vm.network "forwarded_port", guest: 80, host: 8081, auto_correct: true
 #    k8sMaster.vm.provision "ansible" do |ansible|
 #      ansible.playbook = "k8sMaster.yml"
 #    end
@@ -29,6 +28,8 @@ Vagrant.configure("2") do |config|
       vb.cpus = 1
     end
     k8sSlave.vm.network "private_network", ip: "192.168.32.12"
+    k8sSlave.vm.network "forwarded_port", guest: 30000, host: 30000, auto_correct: true
+    k8sSlave.vm.network "forwarded_port", guest: 32000, host: 32000, auto_correct: true
   end
 
   config.vm.define "gluster" do |gluster|
