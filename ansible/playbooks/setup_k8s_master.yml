@@ -3,8 +3,8 @@
 ---
 - hosts: masters
   vars:
-    pod_network: flannel
     # pod_network: flannel | calico (untested)
+    pod_network: flannel
     api_advertise: '--apiserver-advertise-address=192.168.32.11'
   tasks:
     - name: flannel - setting pod network cidr

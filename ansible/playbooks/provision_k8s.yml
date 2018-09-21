@@ -1,5 +1,6 @@
-# from: https://www.digitalocean.com/community/tutorials/how-to-create-a-kubernetes-1-10-cluster-using-kubeadm-on-centos-7
-# mode: https://kubernetes.io/docs/setup/independent/install-kubeadm/
+# https://www.digitalocean.com/community/tutorials/how-to-create-a-kubernetes-1-10-cluster-using-kubeadm-on-centos-7
+# https://kubernetes.io/docs/setup/independent/install-kubeadm/
+# https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/
 
 ---
 - hosts: k8s
@@ -16,6 +17,7 @@
         - apt-transport-https
         - curl
         - make
+        - jq
 
     - name: RedHat - install Docker
       when: ansible_os_family == "RedHat"
