@@ -4,6 +4,11 @@ MK_SESSION ?= minikube
 
 POD_NAMESPACE ?= ingress-nginx
 
+# local-ssd | pd-ssd | pd-standard
+VTYPE ?= pd-standard
+VNAME ?= gke-my-data-disk
+VZONE ?= europe-west1-d
+VSIZE ?= 10GB
 
 # ----------------- local volume in MINIKUBE
 localv_up: minikube_up localv_mount_on localv_apply
@@ -66,9 +71,31 @@ deploy_pod:
 	ansible-playbook -i ./ansible/inventory/hosts ./ansible/playbooks/deploy_pod.yml
 
 
+
+
+### ----------------- gcePersistentDisk volume in GCP instances
+gcev_apply:
+	#@read -p "pvc continue? " -n 1 response
+	kubectl apply -f ./pv-pvc-gcePersistentDisk/pvc-gcePersistentDisk.yaml
+	kubectl apply -f ./pv-pvc-gcePersistentDisk/nginx-deployment-pvc_gcePersistentDisk.yaml
+	kubectl apply -f ./pv-pvc-gcePersistentDisk/nginx-svc_LB.yaml
+
+gcev_unapply:
+	-kubectl delete svc mynginx
+	-kubectl delete deploy nginx
+	-kubectl delete pvc gce-pvc
+
+# echo "This is a GKE test" > /usr/share/nginx/html/index.html
+
+
+
+
 ### ----------------- monitoring k8s commands
-monitor_k8s_deploy:
-	watch kubectl get deploy,ep,pv,pvc -o wide
+monitor_k8s_describe:
+	kubectl describe pods
+
+monitor_k8s_pods:
+	watch kubectl get pods -o wide
 
 monitor_k8s_svc:
 	watch kubectl get svc -o wide
@@ -76,8 +103,15 @@ monitor_k8s_svc:
 monitor_k8s_nodes:
 	watch kubectl get node -o wide
 
+monitor_k8s_deploy:
+	watch kubectl get pods,deploy,pvc,svc -o wide
+
 monitor_k8s_all:
-	watch kubectl get deploy,ep,pv,pvc,ingress,nodes,svc -o wide
+	watch kubectl get pods,deploy,ep,pv,pvc,ingress,nodes,svc -o wide
+
+monitor_k8s_events:
+	watch "kubectl get events --sort-by=.metadata.creationTimestamp | tac"
+
 
 
 ### ----------------- ingress / load balancer

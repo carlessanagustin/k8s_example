@@ -90,6 +90,21 @@ make glusterv_down
 
 ### 3. Deploy Nginx with a Google Compute Engine (GCE) Persistent Disk volume
 
+!!EXPERIMENTAL!!
+
 TODO
+
+```shell
+make gcev_apply
+```
+
+* Official documentation
+    * https://cloud.google.com/kubernetes-engine/docs/tutorials/persistent-disk
+    * https://github.com/GoogleCloudPlatform/kubernetes-engine-samples
+
+    * https://kubernetes.io/docs/concepts/storage/volumes/#gcepersistentdisk
+    * https://kubernetes.io/docs/concepts/storage/storage-classes/
+    * https://cloud.google.com/compute/docs/disks/#performance
+    * https://cloud.google.com/compute/docs/disks/add-persistent-disk#formatting
 
 [back](./README.md)

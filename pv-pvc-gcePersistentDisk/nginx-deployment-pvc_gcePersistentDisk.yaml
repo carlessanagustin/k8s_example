@@ -1,0 +1,43 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: default
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      volumes:
+        - name: myspace
+          persistentVolumeClaim:
+            claimName: gce-pvc
+      initContainers:
+        - name: install
+          image: busybox
+          command:
+            - wget
+            - "-O"
+            - "/work-dir/index.html"
+            - http://kubernetes.io
+          volumeMounts:
+            - mountPath: "/work-dir"
+              name: myspace
+      containers:
+        - image: nginx:1.15
+          name: nginx
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - mountPath: "/usr/share/nginx/html"
+              name: myspace
+      restartPolicy: Always
