@@ -1,5 +1,6 @@
 # TODO
 
+* https://github.com/kubernetes/examples/tree/master/staging/https-nginx
 * https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
 * https://www.digitalocean.com/community/tutorials/how-to-install-software-on-kubernetes-clusters-with-the-helm-package-manager
     * https://helm.sh/
