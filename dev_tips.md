@@ -5,6 +5,18 @@
 * https://www.digitalocean.com/community/tutorials/how-to-install-software-on-kubernetes-clusters-with-the-helm-package-manager
     * https://helm.sh/
 
+
+# Ingress
+
+* https://kubernetes.github.io/ingress-nginx/
+* image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.19.0
+
+
+
+
+
+
+
 # minikube
 
 ## option 1

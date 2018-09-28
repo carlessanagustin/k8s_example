@@ -21,15 +21,26 @@ Vagrant.configure("2") do |config|
 #    end
   end
 
-  config.vm.define "k8sSlave" do |k8sSlave|
-    k8sSlave.vm.host_name = "k8sSlave"
-    k8sSlave.vm.provider "virtualbox" do |vb|
+  config.vm.define "k8sSlave1" do |k8sSlave1|
+    k8sSlave1.vm.host_name = "k8sSlave1"
+    k8sSlave1.vm.provider "virtualbox" do |vb|
       vb.memory = 512
       vb.cpus = 1
     end
-    k8sSlave.vm.network "private_network", ip: "192.168.32.12"
-    k8sSlave.vm.network "forwarded_port", guest: 30000, host: 30000, auto_correct: true
-    k8sSlave.vm.network "forwarded_port", guest: 32000, host: 32000, auto_correct: true
+    k8sSlave1.vm.network "private_network", ip: "192.168.32.12"
+    k8sSlave1.vm.network "forwarded_port", guest: 30000, host: 30000, auto_correct: true
+    k8sSlave1.vm.network "forwarded_port", guest: 32000, host: 32000, auto_correct: true
+  end
+
+  config.vm.define "k8sSlave2" do |k8sSlave2|
+    k8sSlave2.vm.host_name = "k8sSlave2"
+    k8sSlave2.vm.provider "virtualbox" do |vb|
+      vb.memory = 512
+      vb.cpus = 1
+    end
+    k8sSlave2.vm.network "private_network", ip: "192.168.32.13"
+    k8sSlave2.vm.network "forwarded_port", guest: 30000, host: 30001, auto_correct: true
+    k8sSlave2.vm.network "forwarded_port", guest: 32000, host: 32001, auto_correct: true
   end
 
   config.vm.define "gluster" do |gluster|

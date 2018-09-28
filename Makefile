@@ -16,10 +16,10 @@ localv_up: minikube_up localv_mount_on localv_apply
 localv_down: localv_mount_off minikube_down
 
 minikube_up:
-	minikube start
+	-minikube start
 
 minikube_down:
-	minikube delete
+	-minikube delete
 
 localv_mount_on:
 	tmux new-session -d -s ${MK_SESSION} minikube mount ${HTDOCS}:${SHARED_DIR}
@@ -38,7 +38,7 @@ localv_results:
 
 
 
-k8s_up: vagrant_reset provision_k8s
+k8s_up: vagrant_reset provision_k8s provision_helm
 
 ### ----------------- glusterfs volume in vagrant instances
 glusterv_up: vagrant_reset provision_k8s provision_glusterfs deploy_pod
@@ -54,7 +54,8 @@ glusterv_apply:
 
 vagrant_reset:
 	-vagrant destroy -f
-	vagrant up
+	#vagrant up
+	vagrant up k8sMaster k8sSlave1 k8sSlave2
 
 vagrant_destroy:
 	-vagrant destroy -f
@@ -66,6 +67,9 @@ provision_k8s:
 
 provision_glusterfs:
 	ansible-playbook -i ./ansible/inventory/hosts ./ansible/playbooks/provision_glusterfs.yml
+
+provision_helm:
+	ansible-playbook -i ./ansible/inventory/hosts ./ansible/playbooks/provision_helm.yml
 
 deploy_pod:
 	ansible-playbook -i ./ansible/inventory/hosts ./ansible/playbooks/deploy_pod.yml

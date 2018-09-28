@@ -7,6 +7,8 @@
 ### 1. Deploy Nginx with a local volume
 (Best option for development environments)
 
+#### Architecture
+
 ![Kubernetes-local_devel](diagrams/Kubernetes-local_devel.png)
 
 #### 1.1. Run Kubernetes on Minikube
@@ -58,10 +60,15 @@ make localv_down
     * https://kubernetes.io/docs/setup/minikube/#persistent-volumes
     * https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/
 
+----
 
 ### 2. Deploy Nginx with a GlusterFS volume
 
+#### Architecture
+
 ![Kubernetes-inhouse](diagrams/Kubernetes-inhouse.png)
+
+#### Steps
 
 * Create environment: Start Vagrant instances, provision K8s, provision GlusterFS, deploy Nginx pod
 
@@ -92,10 +99,17 @@ make glusterv_down
 
 * [Exposing services](./exposing-services): Expose an application outside a Kubernetes cluster using a Service
 
+----
+
 ### 3. Deploy Nginx with a Google Compute Engine (GCE) Persistent Disk volume !!EXPERIMENTAL!!
+
 (TODO)
 
+#### Architecture
+
 ![Kubernetes-cloud](diagrams/Kubernetes-cloud.png)
+
+#### Steps
 
 * Commands
 
