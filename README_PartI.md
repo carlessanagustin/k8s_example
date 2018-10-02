@@ -17,6 +17,8 @@ kubectl expose deployment nginx --type=LoadBalancer --name=mynginx
 
 ```shell
 watch kubectl describe service mynginx
+or
+watch kubectl get service mynginx -o wide
 ```
 
 * Delete
