@@ -1,0 +1,21 @@
+; ; steps on change
+; * inventory >> Change public IPs
+; * Makefile >> INVENTORY ?= ./ansible/inventory/gcp
+
+
+[masters]
+master  ansible_host=35.240.121.4
+
+[workers]
+worker1  ansible_host=35.205.59.149
+worker2  ansible_host=35.205.178.112
+
+[k8s:children]
+masters
+workers
+
+[all:vars]
+ansible_user=csanagustin
+ansible_ssh_private_key_file=~/.ssh/google_compute_engine
+; api_advertise=''
+api_advertise='--apiserver-advertise-address=10.132.0.14'

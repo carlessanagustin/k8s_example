@@ -18,5 +18,9 @@
     - name: join k8s cluster
       shell: "{{ item }}"
       with_items:
+        - "sudo modprobe -- ip_vs"
+        - "sudo modprobe -- ip_vs_rr"
+        - "sudo modprobe -- ip_vs_wrr"
+        - "sudo modprobe -- ip_vs_sh"
         - "{{ hostvars['master'].join_command }} >> $HOME/node_joined.txt"
         - "sleep 10"

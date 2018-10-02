@@ -3,10 +3,32 @@
 ---
 - hosts: masters
   vars:
-    # pod_network: flannel | calico (untested)
-    pod_network: flannel
-    api_advertise: '--apiserver-advertise-address=192.168.32.11'
+    # pod_network: flannel | calico (untested) | weave
+    pod_network: weave
+    # api_advertise: '--apiserver-advertise-address=192.168.32.11'
+    # api_advertise: '--apiserver-advertise-address=10.132.0.14'
   tasks:
+    - name: ensure net.bridge.bridge-nf-call-ip6tables is set to 1
+      when: pod_network == "flannel" or pod_network == "weave"
+      become: yes
+      sysctl:
+        name: net.bridge.bridge-nf-call-ip6tables
+        value: 1
+        state: present
+
+    - name: ensure net.bridge.bridge-nf-call-iptables is set to 1
+      when: pod_network == "flannel" or pod_network == "weave"
+      become: yes
+      sysctl:
+        name: net.bridge.bridge-nf-call-iptables
+        value: 1
+        state: present
+
+    - name: weave - setting pod network cidr
+      when: pod_network == "weave"
+      become: yes
+      shell: "kubeadm init"
+
     - name: flannel - setting pod network cidr
       when: pod_network == "flannel"
       become: yes
@@ -32,5 +54,21 @@
       when: pod_network == "calico"
       shell: "{{ item }}"
       with_items:
-        - "kubectl apply -f https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml"
-        - "kubectl apply -f https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml"
+        - "kubectl apply -f https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml  >> $HOME/pod_network_setup.txt"
+        - "kubectl apply -f https://docs.projectcalico.org/v3.1/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml  >> $HOME/pod_network_setup.txt"
+
+    - name: weave - deploy a pod network to the cluster
+      when: pod_network == "weave"
+      shell: "kubectl apply -f https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')  >> $HOME/pod_network_setup.txt"
+
+    - name: check master status
+      pause:
+        seconds: 15
+
+    - name: run kubectl get pods --all-namespaces
+      shell: "kubectl get pods --all-namespaces"
+      register: my_pods
+
+    - name: show pods
+      debug:
+        var: my_pods
