@@ -1,0 +1,21 @@
+---
+- hosts:
+    - haproxy
+    - masters
+  tasks:
+    - name:
+      become: yes
+      git:
+        repo: 'https://github.com/carlessanagustin/k8s_example'
+        dest: /opt/k8s_example
+        version: testing-lb
+        clone: yes
+        update: no
+        accept_hostkey: yes
+        force: yes
+
+    #- name: TODO - configuring gluster
+    #  become: yes
+    #  shell: "{{ item}}"
+    #  with_items:
+    #    - 'sed -i "s|^127.0.0.1.*|& $GSERVER|m" /etc/hosts'

@@ -1,0 +1,89 @@
+---
+## gce_machine_type...
+## Machine name - Virtual CPUs	- Memory (GB)
+## f1-micro - 0.2 - 0.60
+## g1-small - 0.5 - 1.70
+## n1-standard-1 - 1 - 3.75
+## n1-standard-2 - 2 - 7.50
+
+## custom gce_machine_type...
+## zones/[ZONE]/machineTypes/custom-NUMBER_OF_CPUS-AMOUNT_OF_MEMORY
+## zones/europe-west4-b/machineTypes/custom-4-8192
+
+## gce_image...
+## ubuntu-1604
+## ubuntu-1404
+
+- name: Create instance(s)
+  hosts: localhost
+  gather_facts: no
+  connection: local
+  vars:
+    #gce_instance_name: mob-bcn-ito-test-002
+    #gce_machine_type: f1-micro
+    gce_image: ubuntu-1604
+    gce_disk_size: 20
+    gce_tags: mobility,test,itops,carles
+    gce_zone: europe-west1-b
+    # service account must have roles: iam.serviceAccountUser + compute.admin
+    gce_service_account_email: csanagustin@engineering-test-197116.iam.gserviceaccount.com
+    gce_credentials_file: ~/keys/engineering-test-197116-c121bfb4e36b.json
+    gce_project_id: engineering-test-197116
+    #gce_groupname: mobility2
+    #gce_output: ./log/gce_instance_info.json
+    #gce_inventory_path: "./hosts/mobility"
+    #gce_inventory_section: "[mobility2]"
+  tasks:
+    - name: Launch instances
+      gce:
+          instance_names: "{{ item.gce_instance_name }}"
+          machine_type: "{{ item.gce_machine_type }}"
+          image: "{{ gce_image }}"
+          disk_size: "{{ gce_disk_size }}"
+          project_id: "{{ gce_project_id }}"
+          tags: "{{ gce_tags }}"
+          zone: "{{ gce_zone }}"
+          state: present
+          service_account_email: "{{ gce_service_account_email }}"
+          credentials_file: "{{ gce_credentials_file }}"
+      register: gce_instance
+      with_items:
+        - { gce_instance_name: 'k8s-test-master-001', gce_machine_type: 'n1-standard-1'}
+        - { gce_instance_name: 'k8s-test-worker-001', gce_machine_type: 'n1-standard-1'}
+        - { gce_instance_name: 'k8s-test-worker-002', gce_machine_type: 'n1-standard-1'}
+        - { gce_instance_name: 'k8s-test-haproxy-001', gce_machine_type: 'g1-small'}
+        #- { gce_instance_name: 'k8s-test-gluster-001', gce_machine_type: 'n1-standard-1'}
+
+
+    - name: Wait for SSH to come up
+      when: False
+      wait_for:
+        host: "{{ item.public_ip }}"
+        port: 22
+        delay: 10
+        timeout: 60
+      with_items: "{{ gce_instance.instance_data }}"
+
+    - name: Add host to groupname
+      when: False
+      add_host:
+        hostname: "{{ gce_instance_name }}"
+        ansible_host: "{{ item.public_ip }}"
+        groupname: "{{ gce_groupname }}"
+      with_items: "{{ gce_instance.instance_data }}"
+
+    - name: Add host to inventory
+      when: False
+      connection: local
+      lineinfile:
+        path: "{{ gce_inventory_path }}"
+        insertafter: "{{ gce_inventory_section }}"
+        line: "{{ gce_instance_name }}   ansible_host={{ item.public_ip }}"
+        state: present
+      with_items: "{{ gce_instance.instance_data }}"
+
+    - name: copy var to file
+      when: False
+      copy:
+        content: "{{ gce_instance }}"
+        dest: "{{ gce_output }}"

@@ -3,12 +3,37 @@
 # https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/
 
 ---
-- hosts: k8s
+- hosts: all
   become: yes
-  vars:
-    k8s_version_Debian: 1.11.3-00
-    k8s_version_RedHat: 1.11.3
   tasks:
+    - name: RedHat - upgrade all packages
+      when: ansible_os_family == "RedHat"
+      yum:
+        name: '*'
+        state: latest
+        update_cache: true
+
+    - name: Debian - upgrade all packages
+      when: ansible_os_family == "Debian"
+      apt:
+        name: "*"
+        state: latest
+        update_cache: yes
+        cache_valid_time: 3600
+        force_apt_get: True
+
+    - name: RedHat - install requirements
+      when: ansible_os_family == "RedHat"
+      yum:
+        name: "{{ item }}"
+        state: present
+        update_cache: true
+      with_items:
+        - curl
+        - make
+        - jq
+        - git
+
     - name: Debian - install requirements
       when: ansible_os_family == "Debian"
       apt:
@@ -21,6 +46,7 @@
         - curl
         - make
         - jq
+        - git
 
     - name: RedHat - install Docker
       when: ansible_os_family == "RedHat"
@@ -43,6 +69,18 @@
         state: restarted
         enabled: yes
 
+    - name: install docker-compose
+      shell: "{{ item }}"
+      with_items:
+        - 'curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose'
+        - 'chmod +x /usr/local/bin/docker-compose'
+
+- hosts: k8s
+  become: yes
+  vars:
+    k8s_version_Debian: 1.11.3-00
+    k8s_version_RedHat: 1.11.3
+  tasks:
     - name: RedHat - disable SELinux
       when: ansible_os_family == "RedHat"
       command: setenforce 0
@@ -78,27 +116,27 @@
     - name: RedHat - install kubelet
       when: ansible_os_family == "RedHat"
       yum:
-        name: kubelet=k8s_version_RedHat
+        name: "kubelet={{ k8s_version_RedHat }}"
         state: present
         update_cache: true
 
     - name: RedHat - install kubectl
       when: ansible_os_family == "RedHat"
       yum:
-        name: kubectl=k8s_version_RedHat
+        name: "kubectl={{ k8s_version_RedHat }}"
         state: present
 
     - name: RedHat - install kubeadm
       when: ansible_os_family == "RedHat"
       yum:
-        name: kubeadm=k8s_version_RedHat
+        name: "kubeadm={{ k8s_version_RedHat }}"
         state: present
         update_cache: true
 
     - name: Debian - install kubelet
       when: ansible_os_family == "Debian"
       apt:
-        package: kubelet=k8s_version_Debian
+        package: "kubelet={{ k8s_version_Debian }}"
         state: present
         update_cache: yes
         cache_valid_time: 3600
@@ -106,14 +144,14 @@
     - name: Debian - install kubectl
       when: ansible_os_family == "Debian"
       apt:
-        package: kubectl=k8s_version_Debian
+        package: "kubectl={{ k8s_version_Debian }}"
         update_cache: yes
         cache_valid_time: 3600
 
     - name: Debian - install kubeadm
       when: ansible_os_family == "Debian"
       apt:
-        package: kubeadm=k8s_version_Debian
+        package: "kubeadm={{ k8s_version_Debian }}"
         update_cache: yes
         cache_valid_time: 3600
 

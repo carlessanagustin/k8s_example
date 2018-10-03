@@ -2,17 +2,23 @@
 ; * inventory >> Change public IPs
 ; * Makefile >> INVENTORY ?= ./ansible/inventory/gcp
 
-
 [masters]
-master  ansible_host=35.240.121.4
+master1  ansible_host=35.195.29.57
 
 [workers]
-worker1  ansible_host=35.205.59.149
-worker2  ansible_host=35.205.178.112
+worker1  ansible_host=35.241.187.143
+worker2  ansible_host=35.241.190.62
 
 [k8s:children]
 masters
 workers
+
+; [gluster]
+; gluster1  ansible_host=
+
+[haproxy]
+haproxy1 ansible_host=104.155.62.50
+
 
 [all:vars]
 ansible_user=csanagustin
