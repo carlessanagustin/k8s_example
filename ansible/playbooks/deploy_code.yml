@@ -8,7 +8,7 @@
       git:
         repo: 'https://github.com/carlessanagustin/k8s_example'
         dest: /opt/k8s_example
-        version: testing-lb
+        version: HEAD
         clone: yes
         update: yes
         accept_hostkey: yes
