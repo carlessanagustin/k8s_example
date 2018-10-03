@@ -6,15 +6,80 @@
     * https://helm.sh/
 
 
+# update haproxy
+
+
+```
+kubectl get svc appsvc1 -o json | jq -j '.spec.ports[0].nodePort'
+kubectl get svc appsvc1 -o json | jq -j '.spec.ports[0].targetPort'
+
+{
+  "appsvc1": [
+    {
+      "nodePort": "80",
+      "targetPort": "30608"
+    },
+    {
+      "nodePort": "443",
+      "targetPort": "30609"
+    }
+  ]
+}
+
+
+
+kubectl get nodes -o json | jq -j '.items[0].status.addresses[0].address'
+kubectl get nodes -o json | jq -j '.items[0].metadata.name'
+
+{
+  "workers": [
+    {
+      "ip": "10.132.0.16",
+      "name": "k8s-test-worker-002"
+    },
+    {
+      "ip": "10.132.0.15",
+      "name": "k8s-test-worker-001"
+    }
+  ]
+}
+
+
+
+sudo apt-get install -y python3-setuptools python3-pip python3-virtualenv ipython3
+#sudo apt-get install -y python-setuptools python-pip python-virtualenv ipython
+#sudo pip install kubernetes
+
+
+
+k8s_ports="kubectl get svc appsvc1 -o json"
+k8s_ips="kubectl get nodes -o json"
+
+import subprocess,json
+
+stdout_json = json.loads(subprocess.getoutput(k8s_ports))
+print (stdout_json['spec']['ports'][0]['nodePort'])
+print (stdout_json['spec']['ports'][0]['targetPort'])
+
+stdout_json = json.loads(subprocess.getoutput(k8s_ips))
+print (stdout_json['items'][0]['status']['addresses'][0]['address'])
+print (stdout_json['items'][0]['metadata']['name'])
+```
+
+new_array = []
+new_array.append({
+  "nodePort": stdout_json['spec']['ports'][0]['nodePort'],
+  "targetPort": stdout_json['spec']['ports'][0]['targetPort']
+  })
+
+new_dict = {"appsvc1": new_array}
+
+
+
 # Ingress
 
 * https://kubernetes.github.io/ingress-nginx/
 * image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.19.0
-
-
-
-
-
 
 
 # minikube

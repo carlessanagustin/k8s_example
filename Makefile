@@ -6,20 +6,23 @@ include Makefiles/glusterfs.mk
 include Makefiles/gcePersistentDisk.mk
 include Makefiles/haproxy.mk
 
-test_ansible:
+ping_ansible:
 	ansible all -i ${INVENTORY} -m ping
 
+facts_ansible:
+	ansible all -i ${INVENTORY} -m setup
 
 
-test_all: provision_k8s deploy_code
-
-
-deploy_code:
-	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/deploy_code.yml
 
 gce_instances:
 	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/gce_instance.yml
 
+deploy_all: ping_ansible provision_k8s deploy_code
+
+
+
+deploy_code:
+	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/deploy_code.yml
 
 
 
