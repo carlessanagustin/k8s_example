@@ -3,11 +3,11 @@
 ; * Makefile >> INVENTORY ?= ./ansible/inventory/gcp
 
 [masters]
-master1  ansible_host=35.195.29.57
+master1  ansible_host=35.241.190.62
 
 [workers]
-worker1  ansible_host=35.241.187.143
-worker2  ansible_host=35.241.190.62
+worker1  ansible_host=35.195.29.57
+worker2  ansible_host=104.155.113.212
 
 [k8s:children]
 masters
@@ -17,7 +17,7 @@ workers
 ; gluster1  ansible_host=
 
 [haproxy]
-haproxy1 ansible_host=104.155.62.50
+haproxy1 ansible_host=35.241.187.143
 
 
 [all:vars]
