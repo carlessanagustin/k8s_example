@@ -1,9 +1,9 @@
 ### ----------------- gcePersistentDisk volume in GCP instances
 gcev_apply:
 	#@read -p "pvc continue? " -n 1 response
-	kubectl apply -f ./pv-pvc-gcePersistentDisk/pvc-gcePersistentDisk.yaml
-	kubectl apply -f ./pv-pvc-gcePersistentDisk/nginx-deployment-pvc_gcePersistentDisk.yaml
-	kubectl apply -f ./pv-pvc-gcePersistentDisk/nginx-svc_LB.yaml
+	kubectl apply -f ./pv-gcePersistentDisk/pvc-gcePersistentDisk.yaml
+	kubectl apply -f ./pv-gcePersistentDisk/nginx-deployment-pvc_gcePersistentDisk.yaml
+	kubectl apply -f ./pv-gcePersistentDisk/nginx-svc_LB.yaml
 
 gcev_unapply:
 	-kubectl delete svc mynginx

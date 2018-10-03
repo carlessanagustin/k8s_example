@@ -16,10 +16,10 @@ localv_mount_off:
 	-tmux kill-session -t ${MK_SESSION}
 
 localv_apply:
-	kubectl apply -f pv-pvc-local/pvc-local.yaml
-	kubectl apply -f pv-pvc-local/pv-local.yaml
-	kubectl apply -f pv-pvc-local/nginx-deployment-pvc_local.yaml
-	kubectl apply -f output/nginx-service_LoadBalancer.yaml
+	kubectl apply -f pv-local/pvc-local.yaml
+	kubectl apply -f pv-local/pv-local.yaml
+	kubectl apply -f pv-local/nginx-deployment-pvc_local.yaml
+	kubectl apply -f pv-local/nginx-service_LoadBalancer.yaml
 
 localv_results:
 	curl $(shell minikube service mynginx --url)

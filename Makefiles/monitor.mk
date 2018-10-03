@@ -11,7 +11,7 @@ monitor_k8s_nodes:
 	watch kubectl get node -o wide
 
 monitor_k8s_deploy:
-	watch kubectl get pods,deploy,pvc,svc -o wide
+	watch kubectl get pods,deploy,svc -o wide
 
 monitor_k8s_all:
 	watch kubectl get pods,deploy,ep,pv,pvc,ingress,nodes,svc -o wide

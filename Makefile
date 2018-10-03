@@ -1,7 +1,8 @@
-include Makefiles/Makefile.mon
-include Makefiles/Makefile.local
-include Makefiles/Makefile.gluster
-include Makefiles/Makefile.gce
+include Makefiles/monitor.mk
+include Makefiles/local.mk
+include Makefiles/glusterfs.mk
+include Makefiles/gcePersistentDisk.mk
+#include Makefiles/haproxy.mk
 
 HTDOCS ?= $(shell pwd)/htdocs
 SHARED_DIR ?= /tmp/k8s
@@ -10,7 +11,7 @@ POD_NAMESPACE ?= ingress-nginx
 # local-ssd | pd-ssd | pd-standard
 VTYPE ?= pd-standard
 VNAME ?= gke-my-data-disk
-VZONE ?= europe-west1-d
+VZONE ?= europe-west1-b
 VSIZE ?= 10GB
 
 #INVENTORY ?= ./ansible/inventory/vagrant
@@ -18,6 +19,15 @@ INVENTORY ?= ./ansible/inventory/gcp
 
 test_ansible:
 	ansible all -i ${INVENTORY} -m ping
+
+test_all: provision_k8s provision_code
+
+provision_code:
+	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/provision_code.yml
+
+gce_instances:
+	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/gce_instance.yml
+
 
 
 k8s_up: vagrant_reset provision_k8s provision_helm
