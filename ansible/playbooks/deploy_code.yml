@@ -1,0 +1,34 @@
+---
+- hosts:
+    - haproxy
+    - masters
+  tasks:
+    - name:
+      become: yes
+      git:
+        repo: 'https://github.com/carlessanagustin/k8s_example'
+        dest: /opt/k8s_example
+        version: testing-lb
+        clone: yes
+        update: yes
+        accept_hostkey: yes
+        force: yes
+
+- hosts: masters
+  tasks:
+    - name: make deploy
+      shell: "{{ item}}"
+      args:
+        chdir: /opt/k8s_example
+      with_items:
+        - "make haproxy_apply"
+
+- hosts: haproxy
+  tasks:
+    - name: make haproxy
+      when: False
+      args:
+        chdir: /opt/k8s_example
+      shell: "{{ item}}"
+      with_items:
+        - "make haproxy_up"
