@@ -1,4 +1,3 @@
-# ----------------- local volume in MINIKUBE
 localv_up: minikube_up localv_mount_on localv_apply
 
 localv_down: localv_mount_off minikube_down

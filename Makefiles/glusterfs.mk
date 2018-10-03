@@ -1,4 +1,3 @@
-### ----------------- glusterfs volume in vagrant instances
 glusterv_up: vagrant_reset provision_k8s provision_glusterfs deploy_pod
 
 glusterv_down: vagrant_destroy
@@ -18,16 +17,8 @@ vagrant_reset:
 vagrant_destroy:
 	-vagrant destroy -f
 
-provision_k8s:
-	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/provision_k8s.yml
-	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/setup_k8s_master.yml
-	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/setup_k8s_worker.yml
-
 provision_glusterfs:
 	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/provision_glusterfs.yml
 
 provision_helm:
 	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/provision_helm.yml
-
-deploy_pod:
-	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/deploy_pod.yml
