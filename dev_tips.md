@@ -133,10 +133,10 @@ watch kubectl get services
 * Apply
 
 ```shell
-kubectl apply -f pv-pvc-glusterfs/ep-glusterfs.yaml
-kubectl apply -f pv-pvc-glusterfs/pv-glusterfs.yaml
-kubectl apply -f pv-pvc-glusterfs/pvc-glusterfs.yaml
-kubectl apply -f pv-pvc-glusterfs/nginx-deployment-pvc_glusterfs.yaml
+kubectl apply -f pv-glusterfs/ep-glusterfs.yaml
+kubectl apply -f pv-glusterfs/pv-glusterfs.yaml
+kubectl apply -f pv-glusterfs/pvc-glusterfs.yaml
+kubectl apply -f pv-glusterfs/nginx-deployment-pvc_glusterfs.yaml
 kubectl apply -f output/nginx-service_LoadBalancer.yaml
 ```
 
