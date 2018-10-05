@@ -8,11 +8,14 @@ include Makefiles/haproxy.mk
 
 # steps
 
-deploy_step1: gce_instances
+step1: gce_instances
+# @local
 # add IPs to `./ansible/inventory/gcp`
-deploy_step2: ping_ansible provision_k8s provision_glusterfs deploy_code
-# change `haproxy.cfg` from `kubectl get svc appsvc1 -o json`
-# run: `cd /opt/k8s_example && make haproxy_up`
+step2: ping_ansible provision_k8s provision_glusterfs deploy_code
+# @haproxy:
+# cd /opt/k8s_example
+# change `sudo vim lb-haproxy/haproxy.cfg` with ports from `kubectl get svc appsvc1 -o json`
+# run: `sudo make haproxy_up`
 
 
 
@@ -23,7 +26,7 @@ deploy_code:
 	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/deploy_code.yml
 
 requirements:
-	sudo apt-get update && sudo apt-get -y install git ansible
+	sudo apt-get update && sudo apt-get -y install make git ansible
 	sudo git clone https://github.com/carlessanagustin/k8s_example.git /opt/k8s_example
 
 # ansible help
