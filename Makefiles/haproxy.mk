@@ -1,8 +1,8 @@
-haproxy_apply:
+app_apply:
 	kubectl apply -f ./lb-haproxy/app-deployment.yaml
 	kubectl apply -f ./lb-haproxy/app-service.yaml
 
-haproxy_delete:
+app_delete:
 	kubectl delete svc appsvc1
 	kubectl delete svc appsvc2
 	kubectl delete deploy app1

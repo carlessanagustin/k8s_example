@@ -6,31 +6,33 @@ include Makefiles/glusterfs.mk
 include Makefiles/gcePersistentDisk.mk
 include Makefiles/haproxy.mk
 
-ping_ansible:
-	ansible all -i ${INVENTORY} -m ping
+# steps
 
-facts_ansible:
-	ansible all -i ${INVENTORY} -m setup
+deploy_step1: gce_instances
+# add IPs to `./ansible/inventory/gcp`
+deploy_step2: ping_ansible provision_k8s provision_glusterfs deploy_code
+# change `haproxy.cfg` from `kubectl get svc appsvc1 -o json`
+# run: `cd /opt/k8s_example && make haproxy_up`
 
 
 
 gce_instances:
 	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/gce_instance.yml
 
-deploy_all: ping_ansible provision_k8s deploy_code
-
-
-
 deploy_code:
 	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/deploy_code.yml
 
+requirements:
+	sudo apt-get update && sudo apt-get -y install git ansible
+	sudo git clone https://github.com/carlessanagustin/k8s_example.git /opt/k8s_example
 
+# ansible help
+ping_ansible:
+	ansible all -i ${INVENTORY} -m ping
 
+facts_ansible:
+	ansible all -i ${INVENTORY} -m setup
 
-
-
-
-k8s_up: vagrant_reset provision_k8s provision_helm
 
 
 ### ----------------- ingress / load balancer
