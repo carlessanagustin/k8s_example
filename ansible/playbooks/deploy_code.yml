@@ -17,11 +17,15 @@
 - hosts: masters
   tasks:
     - name: deploy k8s app
+      tags: deploy
       shell: "{{ item}}"
       args:
         chdir: /opt/k8s_example
       with_items:
-        - "make app_apply"
+        ## 2 apps
+        #- "make app_apply"
+        # 1 apps + gluster
+        - "make glusterv_apply"
 
 - hosts: haproxy
   tasks:

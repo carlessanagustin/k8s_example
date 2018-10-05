@@ -10,3 +10,8 @@ app_delete:
 
 haproxy_up:
 	docker-compose -f ./lb-haproxy/docker-compose.yml up -d
+
+haproxy_down:
+	docker-compose -f ./lb-haproxy/docker-compose.yml down
+
+haproxy_restart: haproxy_down haproxy_up
