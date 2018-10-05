@@ -130,8 +130,8 @@ tmux kill-session -t minikube
 * general vars
 
 ```shell
-S_FOLDER=/tmp/gfs
-C_FOLDER=/tmp/gfs_hook
+S_FOLDER=/data/k8
+C_FOLDER=/data/k8_hook
 GNAME=gfs
 GSERVER=gserver
 ```
@@ -176,12 +176,12 @@ links: https://docs.openshift.com/container-platform/3.9/install_config/storage_
 # gluster
 
 ```shell
-C_FOLDER=/tmp/gfs_hook
+C_FOLDER=/data/k8_hook
 GNAME=gfs
 GSERVER=gserver
 mkdir -p $C_FOLDER
 sudo mount -t glusterfs $GSERVER:/$GNAME $C_FOLDER
-ls /tmp/gfs_hook
+ls /data/k8_hook
 ```
 
 # k8s

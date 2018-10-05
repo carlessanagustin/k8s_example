@@ -41,8 +41,8 @@
         - 'gluster volume start $GNAME'
         - 'echo "This is a GLUSTERFS test" > $S_FOLDER/index.html'
       environment:
-        S_FOLDER: '/tmp/gfs'
+        S_FOLDER: '/data/k8'
         GNAME: 'gfs'
         GSERVER: 'gserver'
 
-# test: mkdir /tmp/gfs && sudo mount -t glusterfs gserver:/gfs /tmp/gfs
+# test: mkdir /data/k8 && sudo mount -t glusterfs gserver:/gfs /data/k8
