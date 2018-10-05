@@ -13,7 +13,11 @@ metadata:
   name: glusterfs-ep
 subsets:
   - addresses:
-      #- ip: 192.168.39.1 #minikube
-      - ip: 192.168.32.10
+      ## minikube
+      #- ip: 192.168.39.1
+      ## vagrant
+      #- ip: 192.168.32.10
+      # gce
+      - ip: 10.132.0.20
     ports:
       - port: 1
