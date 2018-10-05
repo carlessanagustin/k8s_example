@@ -3,7 +3,7 @@
     - haproxy
     - masters
   tasks:
-    - name:
+    - name: deploy git code to instances
       become: yes
       git:
         repo: 'https://github.com/carlessanagustin/k8s_example'
@@ -16,16 +16,26 @@
 
 - hosts: masters
   tasks:
-    - name: make deploy
+    - name: deploy k8s app
       shell: "{{ item}}"
       args:
         chdir: /opt/k8s_example
       with_items:
-        - "make haproxy_apply"
+        - "make app_apply"
 
 - hosts: haproxy
   tasks:
-    - name: make haproxy
+    - name: TODO - add published port to haproxy.cfg
+      when: False
+      template:
+        src: ../templates/haproxy.cfg.j2
+        dest: /opt/k8s_example/lb-haproxy/haproxy.cfg
+        owner: root
+        group: root
+        mode: 0644
+        force: yes
+
+    - name: TODO - start HA proxy server
       when: False
       args:
         chdir: /opt/k8s_example

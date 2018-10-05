@@ -2,7 +2,7 @@
 - hosts: all
   vars:
     GSERVER: 'gserver'
-    GSERVER_IP: '192.168.32.10'
+    #GSERVER_IP: '192.168.32.10'
   tasks:
     - name: Debian - install glusterfs client
       when: ansible_os_family == "Debian"
@@ -14,8 +14,8 @@
         cache_valid_time: 3600
 
     - name: adding gluster server to /etc/hosts
+      become: yes
       lineinfile:
-        become: yes
         path: /etc/hosts
         regexp: '^{{ GSERVER_IP }}'
         line: '{{ GSERVER_IP }}    {{ GSERVER }}'
@@ -31,7 +31,7 @@
         update_cache: yes
         cache_valid_time: 3600
 
-    - name: TODO - configuring gluster
+    - name: Configuring gluster server
       become: yes
       shell: "{{ item}}"
       with_items:
@@ -44,3 +44,5 @@
         S_FOLDER: '/tmp/gfs'
         GNAME: 'gfs'
         GSERVER: 'gserver'
+
+# test: mkdir /tmp/gfs && sudo mount -t glusterfs gserver:/gfs /tmp/gfs
