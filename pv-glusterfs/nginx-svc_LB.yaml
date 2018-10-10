@@ -15,8 +15,8 @@ spec:
     targetPort: 80
   selector:
     io.kompose.service: nginx
-  type: NodePort
-  #type: LoadBalancer
+  #type: NodePort
+  type: LoadBalancer
   #externalTrafficPolicy: Local | Cluster
 #status:
   # loadBalancer: {}

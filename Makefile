@@ -6,16 +6,29 @@ include Makefiles/glusterfs.mk
 include Makefiles/gcePersistentDisk.mk
 include Makefiles/haproxy.mk
 
-# steps
+# check: ./pv-glusterfs/ep-glusterfs.yaml
+GSERVER_IP = 10.132.0.19
 
+## --- steps ---
+
+## create instances
 step1: gce_instances
-# @local
-# add IPs to `./ansible/inventory/gcp`
-step2: ping_ansible provision_k8s provision_glusterfs deploy_code
-# @haproxy:
-# cd /opt/k8s_example
-# change `sudo vim lb-haproxy/haproxy.cfg` with ports from `kubectl get svc appsvc1 -o json`
+
+# manual steps@local
+# update ansible inventory: `./ansible/inventory/gcp`
+
+## provision k8s master, k8s workers & glusterfs
+step2: ping_ansible provision_k8s provision_glusterfs
+
+## deploy code to k8s master & haproxy
+step3: deploy_code
+
+# manual steps@haproxy:
+# `cd /opt/k8s_example`
+# change `sudo vim lb-haproxy/haproxy.cfg` with ports
+#     from `kubectl get svc`
 # run: `sudo make haproxy_up`
+
 
 
 

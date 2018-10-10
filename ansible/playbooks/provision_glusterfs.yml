@@ -13,6 +13,12 @@
         update_cache: yes
         cache_valid_time: 3600
 
+    - name: delete old /etc/hosts entries
+      lineinfile:
+        path: /etc/hosts
+        state: absent
+        regexp: '{{ GSERVER }}'
+
     - name: adding gluster server to /etc/hosts
       become: yes
       lineinfile:
@@ -45,4 +51,4 @@
         GNAME: 'gfs'
         GSERVER: 'gserver'
 
-# test: mkdir /data/k8 && sudo mount -t glusterfs gserver:/gfs /data/k8
+# test: sudo mkdir -p /data/k8 && sudo mount -t glusterfs gserver:/gfs /data/k8

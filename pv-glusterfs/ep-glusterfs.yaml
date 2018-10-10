@@ -18,6 +18,6 @@ subsets:
       ## vagrant
       #- ip: 192.168.32.10
       # gce
-      - ip: 10.132.0.20
+      - ip: 10.132.0.19
     ports:
       - port: 1
