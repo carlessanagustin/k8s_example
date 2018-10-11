@@ -5,50 +5,39 @@ include Makefiles/local.mk
 include Makefiles/glusterfs.mk
 include Makefiles/gcePersistentDisk.mk
 include Makefiles/haproxy.mk
+include Makefiles/ansible.mk
 
-# check: ./pv-glusterfs/ep-glusterfs.yaml
-GSERVER_IP = 10.132.0.19
+# change 1: ./pv-glusterfs/ep-glusterfs.yaml
+# change 2:
+GSERVER_IP = 10.132.0.20
 
-## --- steps ---
+test_me:
+	sed -i 's|<glusterfs_ip>|${GSERVER_IP}|g' ./pv-glusterfs/ep-glusterfs.yaml
 
 ## create instances
 step1: gce_instances
 
-# manual steps@local
+# steps1.A manual@local
 # update ansible inventory: `./ansible/inventory/gcp`
 
-## provision k8s master, k8s workers & glusterfs
-step2: ping_ansible provision_k8s provision_glusterfs
+## provision k8s master, k8s workers & glusterfs, deploy code to k8s master & haproxy
+step2: ping_ansible provision_k8s provision_glusterfs deploy_code
 
-## deploy code to k8s master & haproxy
-step3: deploy_code
-
-# manual steps@haproxy:
+# step2.A manual@haproxy:
 # `cd /opt/k8s_example`
 # change `sudo vim lb-haproxy/haproxy.cfg` with ports
 #     from `kubectl get svc`
 # run: `sudo make haproxy_up`
 
 
+step_rejoin: LIMIT="-l master2" install_k8s setup_k8s_master setup_k8s_worker_rejoin
+# step2.A manual@haproxy: ...
 
-
-gce_instances:
-	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/gce_instance.yml
-
-deploy_code:
-	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/deploy_code.yml
 
 requirements:
 	sudo apt-get update && sudo apt-get -y install make git ansible
 	sudo git clone https://github.com/carlessanagustin/k8s_example.git /opt/k8s_example
-
-# ansible help
-ping_ansible:
-	ansible all -i ${INVENTORY} -m ping
-
-facts_ansible:
-	ansible all -i ${INVENTORY} -m setup
-
+	# user with `ALL=(ALL) NOPASSWD:ALL` in `/etc/sudoers`
 
 
 ### ----------------- ingress / load balancer

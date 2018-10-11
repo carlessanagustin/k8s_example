@@ -1,30 +1,47 @@
-LIMIT ?= -l master2
-node_name ?= k8s-test-worker-001
-service ?= kubelet.service
-
-provision_k8s:
-	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/provision_k8s.yml
-	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/setup_k8s_master.yml
-	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/setup_k8s_worker.yml
-
-recover_k8s_master:
-	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/provision_k8s.yml ${LIMIT}
-	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/setup_k8s_master.yml ${LIMIT}
+# create master2 instance
+# # @ local
+# make install_k8s LIMIT="-l master2"
+# make setup_k8s_master LIMIT="-l master2"
+# make deploy_code LIMIT="-l master2" TAG="-t git"
 
 # @master old
 delete_node:
-	kubectl cordon ${node_name}
-	#kubectl drain ${node_name} --grace-period=0 --force
-	kubectl delete node ${node_name} --force
+	kubectl cordon ${NODE_NAME}
+	kubectl delete node ${NODE_NAME} --grace-period=${GRACE_PERIOD}
+	sleep ${GRACE_PERIOD}
 
-# @master new
-get_token:
-	kubeadm token create --print-join-command
+# make provision_k8s_rejoin
 
-# @worker
-attach_node:
-	sudo systemctl stop ${service}
-	sudo rm -f /etc/kubernetes/pki/ca.crt
-	sudo rm -f /etc/kubernetes/kubelet.conf
-	sudo rm -f /etc/kubernetes/bootstrap-kubelet.conf
-	sudo kubeadm ... (from get_token)
+### # @master new
+### get_token:
+### 	kubeadm token create --print-join-command
+###
+### # @worker
+### dettach_node:
+### 	sudo systemctl stop kubelet.service
+### 	sudo rm -f /etc/kubernetes/pki/ca.crt
+### 	sudo rm -f /etc/kubernetes/kubelet.conf
+### 	sudo rm -f /etc/kubernetes/bootstrap-kubelet.conf
+###
+### attach_node:
+### 	sudo kubeadm ... (from get_token)
+
+
+# make glusterv_apply
+
+# `cd /opt/k8s_example`
+# change `sudo vim lb-haproxy/haproxy.cfg` with ports
+#     from `kubectl get svc`
+# run: `sudo make haproxy_restart`
+
+
+
+
+
+
+
+
+
+
+
+#####

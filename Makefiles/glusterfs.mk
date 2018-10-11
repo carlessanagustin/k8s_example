@@ -6,6 +6,7 @@ glusterv_up: vagrant_reset provision_k8s provision_glusterfs deploy_pod
 glusterv_down: vagrant_destroy
 
 glusterv_apply:
+	#sed -i 's|<glusterfs_ip>|${GSERVER_IP}|g' ./pv-glusterfs/ep-glusterfs.yaml
 	kubectl apply -f ./pv-glusterfs/ep-glusterfs.yaml
 	kubectl apply -f ./pv-glusterfs/pv-glusterfs.yaml
 	kubectl apply -f ./pv-glusterfs/pvc-glusterfs.yaml
@@ -26,9 +27,3 @@ vagrant_reset:
 
 vagrant_destroy:
 	-vagrant destroy -f
-
-provision_glusterfs:
-	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/provision_glusterfs.yml --extra-vars GSERVER_IP=${GSERVER_IP}
-
-provision_helm:
-	ansible-playbook -i ${INVENTORY} ./ansible/playbooks/provision_helm.yml
