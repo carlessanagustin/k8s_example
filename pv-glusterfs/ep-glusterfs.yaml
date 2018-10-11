@@ -17,7 +17,8 @@ subsets:
       #- ip: 192.168.39.1
       ## vagrant
       #- ip: 192.168.32.10
-      # gce
-      - ip: 10.132.0.19
+      ## gce
+      #- ip: 10.132.0.20
+      - ip: <glusterfs_ip>
     ports:
       - port: 1

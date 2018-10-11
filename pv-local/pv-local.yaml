@@ -11,5 +11,5 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/tmp/k8s"
+    path: "/data/k8s"
   persistentVolumeReclaimPolicy: Retain
