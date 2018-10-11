@@ -4,23 +4,46 @@
   gather_facts: false
   tasks:
     - name: get k8s join command
+      tags:
+        - worker
+        - token
       shell: kubeadm token create --print-join-command
       register: join_command_raw
 
-    - name: set join command
+    - name: set fact for join command
+      tags:
+        - worker
+        - token
       set_fact:
         join_command: "{{ join_command_raw.stdout_lines[0] }}"
 
 - hosts: workers
-  become: yes
+  #become: yes
   gather_facts: false
+  vars:
+    UNJOIN: false
   tasks:
+    - name: unjoin k8s cluster
+      when: UNJOIN
+      tags:
+        - worker
+        - unjoin
+      shell: "{{ item }}"
+      with_items:
+        - "sudo systemctl stop kubelet.service"
+        - "sudo rm -f /etc/kubernetes/pki/ca.crt"
+        - "sudo rm -f /etc/kubernetes/kubelet.conf"
+        - "sudo rm -f /etc/kubernetes/bootstrap-kubelet.conf"
+
     - name: join k8s cluster
+      tags:
+        - worker
+        - join
       shell: "{{ item }}"
       with_items:
         - "sudo modprobe -- ip_vs"
         - "sudo modprobe -- ip_vs_rr"
         - "sudo modprobe -- ip_vs_wrr"
         - "sudo modprobe -- ip_vs_sh"
-        - "{{ hostvars['master1'].join_command }} >> $HOME/node_joined.txt"
+        - "sudo {{ hostvars['master1'].join_command }} >> $HOME/node_joined.txt"
         - "sleep 10"

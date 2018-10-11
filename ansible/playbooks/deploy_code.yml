@@ -2,8 +2,12 @@
 - hosts:
     - haproxy
     - masters
+  vars:
+    #GSERVER_IP: 10.132.0.XX
   tasks:
     - name: deploy git code to instances
+      tags:
+        - git
       become: yes
       git:
         repo: 'https://github.com/carlessanagustin/k8s_example'
@@ -13,6 +17,16 @@
         update: yes
         accept_hostkey: yes
         force: yes
+
+    - name: customize deployment
+      tags:
+        - git
+        - custom
+      shell: "{{ item}}"
+      args:
+        chdir: /opt/k8s_example
+      with_items:
+        - "sudo sed -i 's|<glusterfs_ip>|{{ GSERVER_IP }}|g' ./pv-glusterfs/ep-glusterfs.yaml"
 
 - hosts: masters
   tasks:

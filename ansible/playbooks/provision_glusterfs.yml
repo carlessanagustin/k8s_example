@@ -2,7 +2,7 @@
 - hosts: all
   vars:
     GSERVER: 'gserver'
-    #GSERVER_IP: '192.168.32.10'
+    #GSERVER_IP: 10.132.0.XX
   tasks:
     - name: Debian - install glusterfs client
       when: ansible_os_family == "Debian"
