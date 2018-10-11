@@ -104,8 +104,8 @@ minikube ssh
 * Inside MiniKube instance
 
 ```shell
-mkdir -p /tmp/k8s
-echo 'Hello from Kubernetes storage' > /tmp/k8s/index.html
+mkdir -p /data/k8s
+echo 'Hello from Kubernetes storage' > /data/k8s/index.html
 exit
 ```
 
@@ -113,7 +113,7 @@ exit
 
 ```shell
 tmux new-session -d -s "minikube" \
-    minikube mount $(pwd):/tmp/k8s
+    minikube mount $(pwd):/data/k8s
 
 tmux kill-session -t minikube
 ```

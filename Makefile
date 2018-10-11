@@ -7,13 +7,6 @@ include Makefiles/gcePersistentDisk.mk
 include Makefiles/haproxy.mk
 include Makefiles/ansible.mk
 
-# change 1: ./pv-glusterfs/ep-glusterfs.yaml
-# change 2:
-GSERVER_IP = 10.132.0.20
-
-test_me:
-	sed -i 's|<glusterfs_ip>|${GSERVER_IP}|g' ./pv-glusterfs/ep-glusterfs.yaml
-
 ## create instances
 step1: gce_instances
 
@@ -32,6 +25,9 @@ step2: ping_ansible provision_k8s provision_glusterfs deploy_code
 
 step_rejoin: LIMIT="-l master2" install_k8s setup_k8s_master setup_k8s_worker_rejoin
 # step2.A manual@haproxy: ...
+
+
+
 
 
 requirements:

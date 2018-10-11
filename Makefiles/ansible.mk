@@ -20,7 +20,7 @@ setup_k8s_worker_rejoin:
 
 ####### glusterfs
 provision_glusterfs:
-	ansible-playbook -i ${INVENTORY} ${ANSIBLE_FOLDER}/provision_glusterfs.yml --extra-vars GSERVER_IP=${GSERVER_IP} ${LIMIT} ${TAG} ${DEBUG}
+	ansible-playbook -i ${INVENTORY} ${ANSIBLE_FOLDER}/provision_glusterfs.yml ${LIMIT} ${TAG} ${DEBUG}
 
 ####### gcp instances
 gce_instances:
@@ -28,7 +28,7 @@ gce_instances:
 
 ####### worldsensing actions
 deploy_code:
-	ansible-playbook -i ${INVENTORY} ${ANSIBLE_FOLDER}/deploy_code.yml --extra-vars GSERVER_IP=${GSERVER_IP} ${LIMIT} ${TAG} ${DEBUG}
+	ansible-playbook -i ${INVENTORY} ${ANSIBLE_FOLDER}/deploy_code.yml ${LIMIT} ${TAG} ${DEBUG}
 
 ####### ansible help
 ping_ansible:

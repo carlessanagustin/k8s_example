@@ -7,6 +7,7 @@ spec:
   ports:
   - port: 80
     protocol: TCP
+    #targetPort: 80
   selector:
     app: app1
 ---
@@ -19,5 +20,6 @@ spec:
   ports:
   - port: 80
     protocol: TCP
+    #targetPort: 80
   selector:
     app: app2
