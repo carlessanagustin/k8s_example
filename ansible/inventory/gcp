@@ -1,27 +1,26 @@
-; ; steps on change
-; * inventory >> Change public IPs
-; * Makefile >> INVENTORY ?= ./ansible/inventory/gcp
+[gluster]
+gluster1  ansible_host=35.205.152.159
+
+[haproxy]
+haproxy1 ansible_host=35.240.12.22
 
 [masters]
-master1  ansible_host=35.241.190.62
+master1  ansible_host=35.240.9.225
+; master2  ansible_host=
 
 [workers]
-worker1  ansible_host=35.195.29.57
-worker2  ansible_host=104.155.113.212
+worker1  ansible_host=35.205.69.180
+worker2  ansible_host=35.241.172.157
 
 [k8s:children]
 masters
 workers
 
-; [gluster]
-; gluster1  ansible_host=
-
-[haproxy]
-haproxy1 ansible_host=35.241.187.143
-
-
 [all:vars]
 ansible_user=csanagustin
 ansible_ssh_private_key_file=~/.ssh/google_compute_engine
-; api_advertise=''
-api_advertise='--apiserver-advertise-address=10.132.0.14'
+
+api_advertise=''
+; api_advertise='--apiserver-advertise-address=10.132.0.14'
+
+GSERVER_IP=10.132.0.20

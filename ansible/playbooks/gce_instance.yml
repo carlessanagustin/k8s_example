@@ -19,9 +19,6 @@
   gather_facts: no
   connection: local
   vars:
-    #gce_instance_name: mob-bcn-ito-test-002
-    #gce_machine_type: f1-micro
-    #gce_tags: http-server,https-server
     gce_image: ubuntu-1604
     gce_disk_size: 20
     gce_zone: europe-west1-b
@@ -29,10 +26,6 @@
     gce_service_account_email: csanagustin@engineering-test-197116.iam.gserviceaccount.com
     gce_credentials_file: ~/keys/engineering-test-197116-c121bfb4e36b.json
     gce_project_id: engineering-test-197116
-    #gce_groupname: mobility2
-    #gce_output: ./log/gce_instance_info.json
-    #gce_inventory_path: "./hosts/mobility"
-    #gce_inventory_section: "[mobility2]"
   tasks:
     - name: Launch instances
       gce:
@@ -52,37 +45,4 @@
         - { gce_instance_name: 'k8s-test-worker-001', gce_machine_type: 'n1-standard-1'}
         - { gce_instance_name: 'k8s-test-worker-002', gce_machine_type: 'n1-standard-1'}
         - { gce_instance_name: 'k8s-test-haproxy-001', gce_machine_type: 'g1-small', gce_tags: 'http-server,https-server'}
-        #- { gce_instance_name: 'k8s-test-gluster-001', gce_machine_type: 'n1-standard-1'}
-
-    - name: Wait for SSH to come up
-      when: False
-      wait_for:
-        host: "{{ item.public_ip }}"
-        port: 22
-        delay: 10
-        timeout: 60
-      with_items: "{{ gce_instance.instance_data }}"
-
-    - name: Add host to groupname
-      when: False
-      add_host:
-        hostname: "{{ gce_instance_name }}"
-        ansible_host: "{{ item.public_ip }}"
-        groupname: "{{ gce_groupname }}"
-      with_items: "{{ gce_instance.instance_data }}"
-
-    - name: Add host to inventory
-      when: False
-      connection: local
-      lineinfile:
-        path: "{{ gce_inventory_path }}"
-        insertafter: "{{ gce_inventory_section }}"
-        line: "{{ gce_instance_name }}   ansible_host={{ item.public_ip }}"
-        state: present
-      with_items: "{{ gce_instance.instance_data }}"
-
-    - name: copy var to file
-      when: False
-      copy:
-        content: "{{ gce_instance }}"
-        dest: "{{ gce_output }}"
+        - { gce_instance_name: 'k8s-test-gluster-001', gce_machine_type: 'g1-small'}
