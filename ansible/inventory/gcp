@@ -1,16 +1,17 @@
 [gluster]
-gluster1  ansible_host=35.205.152.159
+gluster1  ansible_host=
 
 [haproxy]
-haproxy1 ansible_host=35.240.12.22
+haproxy1 ansible_host=
 
 [masters]
-master1  ansible_host=35.240.9.225
+master1  ansible_host=
 ; master2  ansible_host=
 
 [workers]
-worker1  ansible_host=35.205.69.180
-worker2  ansible_host=35.241.172.157
+worker1  ansible_host=
+worker2  ansible_host=
+worker3  ansible_host=
 
 [k8s:children]
 masters
