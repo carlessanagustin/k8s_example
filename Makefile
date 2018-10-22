@@ -13,18 +13,29 @@ step1: gce_instances
 # steps1.A manual@local
 # update ansible inventory: `./ansible/inventory/gcp`
 
-## provision k8s master, k8s workers & glusterfs, deploy code to k8s master & haproxy
-step2: ping_ansible provision_k8s provision_glusterfs deploy_code
+## provision k8s master & k8s workers
+step2: ping_ansible provision_k8s
 
-# step2.A manual@haproxy:
-# `cd /opt/k8s_example`
-# change `sudo vim lb-haproxy/haproxy.cfg` with ports
+## provision glusterfs
+step3: provision_glusterfs
+
+## deploy code to k8s master (software) & gluster (configuration & data)
+step4: deploy_code
+
+## deploy haproxy
+step5: provision_haproxy
+
+# step manual@haproxy:
+# `cd /opt/haproxy`
+# change `sudo vim haproxy.cfg` with ports
 #     from `kubectl get svc`
-# run: `sudo make haproxy_up`
-
+# run: `sudo make up`
 
 step_rejoin: LIMIT="-l master2" install_k8s setup_k8s_master setup_k8s_worker_rejoin
 # step2.A manual@haproxy: ...
+
+steps_auto: step2 step3 step4 step5
+
 
 
 
