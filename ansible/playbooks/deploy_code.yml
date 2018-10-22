@@ -1,22 +1,23 @@
 ---
 - hosts:
-    - haproxy
+    - gluster
     - masters
-  vars:
-    #GSERVER_IP: 10.132.0.XX
+  vars_files:
+    - ./private.yml
   tasks:
     - name: deploy git code to instances
       tags:
         - git
       become: yes
       git:
-        repo: 'https://github.com/carlessanagustin/k8s_example'
-        dest: /opt/k8s_example
-        version: HEAD
+        repo: "{{ item.git_repo }}"
+        dest: "{{ item.git_dest }}"
+        version: "{{ item.git_version | default('HEAD') }}"
         clone: yes
         update: yes
         accept_hostkey: yes
         force: yes
+      with_items: "{{ repo_list }}"
 
     - name: customize deployment
       tags:

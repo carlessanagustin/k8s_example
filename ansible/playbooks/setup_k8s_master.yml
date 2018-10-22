@@ -5,7 +5,6 @@
   vars:
     # pod_network: flannel | calico (untested) | weave
     pod_network: weave
-    # api_advertise: '--apiserver-advertise-address=192.168.32.11'
     # api_advertise: '--apiserver-advertise-address=10.132.0.14'
   tasks:
     - name: ensure net.bridge.bridge-nf-call-ip6tables is set to 1
@@ -41,6 +40,8 @@
 
     - name: setting up network
       shell: "{{ item }}"
+      tags:
+        - user_env
       with_items:
         - "mkdir -p $HOME/.kube"
         - "sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config"

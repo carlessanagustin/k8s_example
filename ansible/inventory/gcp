@@ -1,17 +1,17 @@
 [gluster]
-gluster1  ansible_host=
+gluster1  ansible_host=104.199.71.229
 
 [haproxy]
-haproxy1 ansible_host=
+haproxy1 ansible_host=35.240.12.22
 
 [masters]
-master1  ansible_host=
+master1  ansible_host=35.240.21.50
 ; master2  ansible_host=
 
 [workers]
-worker1  ansible_host=
-worker2  ansible_host=
-worker3  ansible_host=
+worker1  ansible_host=35.240.35.116
+worker2  ansible_host=35.241.161.93
+worker3  ansible_host=35.189.255.147
 
 [k8s:children]
 masters
@@ -24,4 +24,4 @@ ansible_ssh_private_key_file=~/.ssh/google_compute_engine
 api_advertise=''
 ; api_advertise='--apiserver-advertise-address=10.132.0.14'
 
-GSERVER_IP=10.132.0.20
+GSERVER_IP=10.132.0.22

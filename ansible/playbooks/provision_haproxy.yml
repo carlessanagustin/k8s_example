@@ -1,0 +1,20 @@
+---
+- hosts:
+    - haproxy
+  vars_files:
+    - ./private.yml
+  tasks:
+    - name: deploy haproxy to instances
+      tags:
+        - git
+      become: yes
+      git:
+        repo: "{{ item.git_repo }}"
+        dest: "{{ item.git_dest }}"
+        version: "{{ item.git_version | default('HEAD') }}"
+        clone: yes
+        update: yes
+        accept_hostkey: yes
+        force: yes
+      with_items:
+        - { git_repo: 'https://github.com/carlessanagustin/docker_haproxy.git', git_dest: '/opt/haproxy', git_version: 'HEAD' }

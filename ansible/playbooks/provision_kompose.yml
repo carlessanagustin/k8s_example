@@ -1,0 +1,12 @@
+# http://kompose.io/installation/
+---
+- hosts:
+    - masters
+  vars:
+    kompose_version: v1.16.0
+  tasks:
+    - name: install kompose
+      shell: "{{ item}}"
+      with_items:
+        - "sudo curl -L https://github.com/kubernetes/kompose/releases/download/{{ kompose_version }}/kompose-linux-amd64 -o /usr/local/bin/kompose"
+        - "sudo chmod +x /usr/local/bin/kompose"

@@ -9,6 +9,8 @@ install_k8s:
 setup_k8s_master:
 	ansible-playbook -i ${INVENTORY} ${ANSIBLE_FOLDER}/setup_k8s_master.yml ${LIMIT} ${TAG} ${DEBUG}
 
+setup_k8s_user_env: TAG="-t user_env" setup_k8s_master
+
 setup_k8s_worker:
 	ansible-playbook -i ${INVENTORY} ${ANSIBLE_FOLDER}/setup_k8s_worker.yml ${LIMIT} ${TAG} ${DEBUG}
 
@@ -26,6 +28,10 @@ provision_glusterfs:
 gce_instances:
 	ansible-playbook -i ${INVENTORY} ${ANSIBLE_FOLDER}/gce_instance.yml
 
+####### glusterfs
+provision_haproxy:
+	ansible-playbook -i ${INVENTORY} ${ANSIBLE_FOLDER}/provision_haproxy.yml ${LIMIT} ${TAG} ${DEBUG}
+
 ####### worldsensing actions
 deploy_code:
 	ansible-playbook -i ${INVENTORY} ${ANSIBLE_FOLDER}/deploy_code.yml ${LIMIT} ${TAG} ${DEBUG}
@@ -40,3 +46,11 @@ facts_ansible:
 ####### helm
 provision_helm:
 	ansible-playbook -i ${INVENTORY} ${ANSIBLE_FOLDER}/provision_helm.yml ${LIMIT} ${TAG} ${DEBUG}
+
+####### k8s dashboardUI
+provision_dashboardUI:
+	ansible-playbook -i ${INVENTORY} ${ANSIBLE_FOLDER}/provision_dashboardUI.yml ${LIMIT} ${TAG} ${DEBUG}
+
+####### kompose
+provision_kompose:
+	ansible-playbook -i ${INVENTORY} ${ANSIBLE_FOLDER}/provision_kompose.yml ${LIMIT} ${TAG} ${DEBUG}

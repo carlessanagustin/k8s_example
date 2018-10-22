@@ -22,10 +22,10 @@
     gce_image: ubuntu-1604
     gce_disk_size: 20
     gce_zone: europe-west1-b
-    # service account must have roles: iam.serviceAccountUser + compute.admin
-    gce_service_account_email: csanagustin@engineering-test-197116.iam.gserviceaccount.com
-    gce_credentials_file: ~/keys/engineering-test-197116-c121bfb4e36b.json
-    gce_project_id: engineering-test-197116
+    ## service account must have roles: iam.serviceAccountUser + compute.admin
+    #gce_service_account_email: 
+    #gce_credentials_file: 
+    #gce_project_id: 
   tasks:
     - name: Launch instances
       gce:
@@ -44,5 +44,6 @@
         - { gce_instance_name: 'k8s-test-master-001', gce_machine_type: 'n1-standard-1'}
         - { gce_instance_name: 'k8s-test-worker-001', gce_machine_type: 'n1-standard-1'}
         - { gce_instance_name: 'k8s-test-worker-002', gce_machine_type: 'n1-standard-1'}
+        - { gce_instance_name: 'k8s-test-worker-003', gce_machine_type: 'n1-standard-1'}
         - { gce_instance_name: 'k8s-test-haproxy-001', gce_machine_type: 'g1-small', gce_tags: 'http-server,https-server'}
         - { gce_instance_name: 'k8s-test-gluster-001', gce_machine_type: 'g1-small'}
