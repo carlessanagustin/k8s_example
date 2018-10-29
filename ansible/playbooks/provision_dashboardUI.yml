@@ -1,6 +1,24 @@
 # https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
 ---
-- hosts: masters
+- name: "Playbook to deploy an INSECURE Kubernetes Dashboard UI"
+  hosts: master
+  vars:
+    iac_files:
+      - kubernetes-dashboard.yaml
+      - kubernetes-dashboard-crb.yaml
   tasks:
-    - name: Deploy Dashboard UI
-      shell: "kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml"
+    - name: Copy IaC to remote
+      template:
+        src: "../templates/{{ item }}"
+        dest: "{{ item }}"
+      with_items: "{{ iac_files }}"
+
+    - name: INSECURE Deploy Dashboard UI
+      shell: "kubectl create -f {{ item }}"
+      with_items: "{{ iac_files }}"
+
+    #- name: INSECURE Deploy Dashboard UI
+    #  shell: "{{ item}}"
+    #  with_items:
+    #    - "kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml"
+    #    - "kubectl create ClusterRoleBinding kubernetes-dashboard -n kube-system --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard"

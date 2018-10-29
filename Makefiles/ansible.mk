@@ -52,5 +52,5 @@ provision_dashboardUI:
 	ansible-playbook -i ${INVENTORY} ${ANSIBLE_FOLDER}/provision_dashboardUI.yml ${LIMIT} ${TAG} ${DEBUG}
 
 ####### kompose
-provision_kompose:
-	ansible-playbook -i ${INVENTORY} ${ANSIBLE_FOLDER}/provision_kompose.yml ${LIMIT} ${TAG} ${DEBUG}
+provision_tools:
+	ansible-playbook -i ${INVENTORY} ${ANSIBLE_FOLDER}/provision_tools.yml ${LIMIT} ${TAG} ${DEBUG}
