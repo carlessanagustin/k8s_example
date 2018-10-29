@@ -5,13 +5,25 @@
 * https://www.digitalocean.com/community/tutorials/how-to-install-software-on-kubernetes-clusters-with-the-helm-package-manager
     * https://helm.sh/
 
+# K8S BEARER TOKEN example
+
+```shell
+kubectl get sa kubernetes-dashboard -n kube-system -o json | jq -rC '.secrets'
+kubectl get secret kubernetes-dashboard-token-hvjww -n kube-system -o json | jq -rC '.data.token'
+```
+
+```shell
+kubectl create serviceaccount jenkins
+kubectl get serviceaccounts jenkins -o yaml
+kubectl get secret jenkins-token-1yvwg -o yaml
+```
 
 # update haproxy
 
 
 ```
-kubectl get svc appsvc1 -o json | jq -j '.spec.ports[0].nodePort'
-kubectl get svc appsvc1 -o json | jq -j '.spec.ports[0].targetPort'
+kubectl get svc appsvc1 -o json | jq -jC '.spec.ports[0].nodePort'
+kubectl get svc appsvc1 -o json | jq -jC '.spec.ports[0].targetPort'
 
 {
   "appsvc1": [
