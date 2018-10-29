@@ -1,7 +1,11 @@
 ---
 # deploy_code_v2.yml
-repo_list:
-  - { git_repo: '', git_dest: '', git_version: '' }
+git_key_file:
+deploy_code_repo_list:
+  - { git_repo: '', git_dest: '', git_version: '', git_key_file: '' }
+
+
+
 
 # gce_instance.yml
 gce_service_account_email:

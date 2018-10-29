@@ -2,27 +2,43 @@
 - hosts:
     - gluster
     - masters
+  gather_facts: no
   vars_files:
     - ./private.yml
   tasks:
+    - name: copy git_key_file to remote
+      tags: git
+      copy:
+        src: "{{ git_key_file }}"
+        dest: git_key_file
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 0600
+        force: yes
+
     - name: deploy git code to instances
-      tags:
-        - git
+      tags: git
       become: yes
       git:
         repo: "{{ item.git_repo }}"
         dest: "{{ item.git_dest }}"
         version: "{{ item.git_version | default('HEAD') }}"
+        key_file: "/home/{{ ansible_user }}/{{ item.git_key_file | default(omit) }}"
         clone: yes
         update: yes
         accept_hostkey: yes
         force: yes
-      with_items: "{{ repo_list }}"
+      with_items: "{{ deploy_code_repo_list }}"
+
+    - name: delete git_key_file from remote
+      tags: git
+      file:
+        path: git_key_file
+        state: absent
+        force: yes
 
     - name: customize deployment
-      tags:
-        - git
-        - custom
+      tags: customize
       shell: "{{ item}}"
       args:
         chdir: /opt/k8s_example
