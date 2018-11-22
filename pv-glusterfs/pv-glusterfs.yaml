@@ -3,7 +3,8 @@ kind: PersistentVolume
 metadata:
   name: gluster-pv
   annotations:
-    pv.beta.kubernetes.io/gid: "590"
+    #pv.beta.kubernetes.io/gid: "590"
+    pv.beta.kubernetes.io/gid: "0"
 spec:
   #storageClassName: gluster-sc
   capacity:
